@@ -62,6 +62,7 @@ OBJECT FUNCTIONS:
 * draw_filled_rectangle(x0, y0, x1, y1, colour)
 * draw_circle(x0, y0, radius, colour)    1 pixel wide
 * draw_bmp(filename, x0, y0)   If .bmp file is found, load at top/left = x0:y0. No rescaling.
+    Save your BMP file vertically "flipped". Ensure your x0:y0 origin allows pixel space on display.
 
 
 SCROLL FUNCTION (chip-based):  

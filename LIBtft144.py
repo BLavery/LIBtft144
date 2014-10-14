@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#   LIBtft144.py                 v1.0
+#   LIBtft144.py                 v1.0.1
 
 #   Raspberry Pi Serial-SPI version.  Tested against the "BLACK" 1.44 board from eBay
 #        eg http://www.ebay.com.au/itm/141239781210     - under $4!
@@ -690,16 +690,21 @@ class TFT144:
             bitmap_file.seek(start)
             self.set_frame(x0, x0+w-1, y0, y0+h-1)
             self.write_command(WRITE_MEMORY_START)
-            for x in xrange(w):   # 3 bytes of colour / pixel
-                  dbuf = [0] * (h*2)
-                  for y in xrange(h):
+            for y in xrange(h):   # 3 bytes of colour / pixel
+                  dbuf = [0] * (w*2)
+                  for x in xrange(w):
                       b = ord(bitmap_file.read(1)) >>3   # We want only 5 bits of colour
                       g = ord(bitmap_file.read(1)) >>3
                       r = ord(bitmap_file.read(1)) >>3
                       RGB = self.rgb(r, g, b)
-                      dbuf[2*y] = RGB>>8
-                      dbuf[1 + (2*y)] = RGB&(~65280)
+                      dbuf[2*x] = RGB>>8
+                      dbuf[1 + (2*x)] = RGB&(~65280)
                   self.write_data(dbuf)
+                  # Now, BMP has a 4byte alignment issue at end of each line   V1.0.1
+                  x = 3*w # bytes in line @ 3bytes/pixel
+                  while (x % 4):
+                      x += 1
+                      bitmap_file.read(1)   # waste a byte until aligned
         return True
 
     def invert_screen(self):
