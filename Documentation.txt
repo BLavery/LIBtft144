@@ -1,0 +1,77 @@
+LIBtft144
+=========
+
+Raspberry Pi pin numbers are in BCM numbering.
+SCLK and MISO go to SCK and SDA on module.
+The module is write-only, so MOSI is not used.
+VCC of module goes to Raspberry Pi +5V.
+
+Text size is coded 1 for 6x8 font, 2 for 12x16 font.
+Screen pixel coordinates are x: 0 to 127    y: 0 to 127    t-b, l-r
+
+Import the library module:
+from LIBtft144 import TFT144
+
+
+CONSTRUCTOR:
+
+myTFT = TFT144(CE_num, A0_pin, RST_pin, LED_pin, ScreenOrientation)
+where CE_num = 0 or 1 (CE0/CE1), 
+A0 (address line 0??) is also known as DC (data/command)
+RST_pin may be declared or defaulted as 0 (and then tie RST to +3.3V)
+LED_pin may be declared or defaulted as 0 (and then tie LED to +3.3V)
+ScreenOrientation defaults to 0 degrees, but may be:
+      TFT144.ORIENTATION0, or ...90 or ...180 or ...270
+
+Constructor examples:
+
+myTFT = TFT144(0, 22)
+myLCD = TFT144(1, 22, 18, 23, TFT144.ORIENTATION270)
+
+
+OBJECT PROPERTIES:
+
+ORIENTATION90 etc
+GPIOplatform (one of  “RPI-GPIO” or “virtGPIO”)
+Prenamed colours BLUE GREEN RED PINK VIOLET LIGHTGREEN BLACK 
+                        WHITE GREY LIGHTBLUE YELLOW
+
+OBJECT FUNCTIONS:
+
+led_on(True/False)     Turns screen on/off
+reset_LCD()              Hard or soft reset of module, depending whether RST pin is active.
+clear_display(colour)
+invert_screen()      Reverse every colour
+normal_screen()    Back to normal colours
+rgb(red, green, blue)   From 3 (5-bit) colours, return a 16-bit “colour”
+put_char(char, x, y, foregroundColour, backgroundColour, size)   Size defaults to 1 (small)
+put_string(string, x, y, fgColour, bgColour, size)   Wraps (to similar start column) to next line
+textX(X, size)             Return pixel x-column matching  X character-sizes across
+textY(Y, size)              Return pixel y-row matching Y character-sizes down
+draw_dot(x, y, colour)  At pixel coordinates x:y
+draw_line(x0, y0, x1, y1, colour)   Line 1 pixel wide from x0:y0 to x1:y1
+draw_rectangle(x0, y0, x1, y1, colour)   Single pixel frame
+draw_filled_rectangle(x0, y0, x1, y1, colour)
+draw_circle(x0, y0, radius, colour)    1 pixel wide
+draw_bmp(filename, x0, y0)   If file is found, load at top/left = x0:y0.
+
+
+SCROLL FUNCTION (chip-based):  
+
+(Difficult to see how this is used convincingly! It also misbehaves with “orientations”)
+scroll_area(topReservedRows, bottomReservedRows)   
+           Defines central area (128 – reserved rows) that can scroll
+scroll_start(lines)
+           Displaces the central data by that many lines. Needs loop to simulate smooth scroll.
+
+
+EXAMOPLE APPLICATION (Raspberry Pi):
+
+from LIBtft144 import TFT144
+TFT = TFT144(0, 22)
+TFT.clear_display(TFT.BLUE)
+TFT.put_string(“Hello”, 50, 30, TFT.WHITE, TFT.BLUE, 2)
+
+This example uses CE0 on the SPI, and GPIO pin22 to “A0” on the module.
+It prints “Hello” near centre of screen, white lettering on all blue background, large font.
+
