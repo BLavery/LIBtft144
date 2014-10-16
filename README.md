@@ -4,6 +4,7 @@ LIBtft144
 LCD-TFT-1.44 128x128px.  An SPI library for Raspberry Pi or Virtual GPIO.
 
 The "BLACK" 1.44 board from eBay -    eg http://www.ebay.com.au/itm/141239781210     - under $4!
+The "RED" version looks to be identical, but was not tested.
 
 Board has inbuilt 5V-3V (2.9?) regulator (which does NOT break out the 3V!!)
 As far as I can discern, logic level is still 3.3V limit, despite supply is 5V.

@@ -1,4 +1,4 @@
-#   example-tft144.py          V1.0
+#   example-tft144.py          V1.1
 #   Brian Lavery (C) Oct 2014    brian (at) blavery (dot) com
 #   Free software.
 
@@ -8,6 +8,11 @@ from LIBtft144 import TFT144
 from time import sleep
 
 # Do NOT have files virtGPIO.py & vGPIOconstants.py on the RPI. That would trigger an attempt to use virt GPIO.
+# In any case, we will now trap for non-RPI-GPIO:
+
+if not TFT144.GPIOplatform == "RPI-GPIO":
+    print "Not RPI GPIO !"
+    exit()
 
 
 # My BCM GPIO numbers
@@ -17,18 +22,21 @@ DC =  22    # Labeled on board as "A0"
 LED = 23    # LED backlight sinks 10-14 mA @ 3V
 
 
+# Don't forget the other 2 SPI pins SCK and MOSI (SDA)
+
 TFT = TFT144(CE, DC, RST, LED)
 
 
+print "Display character set:"
 posx=0
 posy=0
-print "Display character set:"
+# Manual cursor moving
 for i in range (32,256):
    TFT.put_char(chr(i),posx,posy,TFT.WHITE,TFT.BLACK)
-   posx+=6
-   if posx>=121:
+   posx+=TFT.fontW
+   if (posx+TFT.fontW)>128:
       posx=0
-      posy+=8
+      posy+=TFT.fontH
 sleep(2)
 
 
@@ -36,8 +44,9 @@ TFT.clear_display(TFT.BLUE)
 
 
 print "Message:"
-TFT.put_string("Hello,World!",28,28,TFT.WHITE,TFT.BLUE)  # small font (size = 1 default)
-TFT.put_string("TFT144", 24,80,TFT.RED, TFT.BLUE, 2)     # large font (size = 2)
+# Automatic cursor moving
+TFT.put_string("Hello,World!",28,28,TFT.WHITE,TFT.BLUE)  # std font 3 (default)
+TFT.put_string("TFT144", 24,80,TFT.RED, TFT.BLUE, 4)     # doubled font 4
 sleep(3)
 
 

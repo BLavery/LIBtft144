@@ -1,4 +1,4 @@
-#   example-tft144-grfx.py          V1.0
+#   example-tft144-grfx.py          V1.1
 #   Brian Lavery (C) Oct 2014    brian (at) blavery (dot) com
 #   Free software.
 
@@ -46,6 +46,8 @@ else:
     print "No GPIO found."
     exit()
 
+#  Don't forget the other 2 SPI pins SCK and MOSI (SDA)
+
 #  OK, GPIO (of one variety) is all ready. Now do the LCD demo:
 
 
@@ -77,6 +79,8 @@ sleep(7)
 
 
 print "Start Scroll"
+# NOTE: scroll function looks tempting, but may not really have any useful application.
+# It also seems not to acknowledge display orientation setting.
 TFT.scroll_area(10,50)
 for i in range (1,132):
    TFT.scroll_start(i)
@@ -89,6 +93,8 @@ sleep(3)
 
 TFT.put_string("<<< INVERSION >>>",TFT.textX(2),TFT.textY(15),TFT.YELLOW,TFT.RED)
 # Note can use "character-based" cursor location instead of pixel-based (textX())
+sleep(2)
+
 print "INVERSION test"
 for i in range (0,2):
    TFT.invert_screen()
@@ -101,8 +107,8 @@ TFT.clear_display(TFT.BLUE)
 
 
 print "Message:"
-TFT.put_string("Hello,World!",28,28,TFT.WHITE,TFT.BLUE)  # small font
-TFT.put_string("g'DAY", 28,80,TFT.RED, TFT.BLUE, 2)      # large font
+TFT.put_string("Hello,World!",21,22,TFT.WHITE,TFT.BLUE,7)
+TFT.put_string("g'DAY", 25,80,TFT.RED, TFT.BLUE, 4)
 sleep(3)
 
 print "BMP image:"
@@ -116,6 +122,8 @@ else:
     if TFT.draw_bmp("gpio.bmp", 29,45):
         sleep(6)
 
+TFT.draw_bmp("bl.bmp")
+sleep(6)
 
 print "Rectangle"
 TFT.draw_filled_rectangle(0,0,128,64 ,TFT.RED)
