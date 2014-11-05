@@ -27,5 +27,4 @@ On Raspberry Pi, uses SpiDev and RPi.GPIO.
                    
                    
                    
-(As at initial release 14 Oct 2014, "virtual GPIO" V0.9.5 is unreleased. Only V0.9.0 is released.
- So use only on Raspberry Pi GPIO for now.)
+(Use only on Raspberry Pi GPIO for now.)
