@@ -4,7 +4,8 @@ LIBtft144
 V1.1
 
 Python library for a 128x128 LCD-TFT module with ILI9163 controller chip.
-This documentation generally assumes Raspberry Pi, but LIBtft144 is also intended for use with "virtual GPIO".
+This documentation generally assumes Raspberry Pi, 
+   ... but LIBtft144 is also intended for FUTURE use with "virtual GPIO".
 
 Raspberry Pi pin numbers are in BCM numbering.
 SCLK and MISO go to SCK and SDA on module.
@@ -42,7 +43,6 @@ Constructor examples (rPi):
 OBJECT PROPERTIES:
 
 * ORIENTATION90 etc
-* GPIOplatform (one of  “RPI-GPIO”, “virtGPIO”). The library finds correct platform.
 * Prenamed colours: BLUE GREEN RED PINK VIOLET LIGHTGREEN
                  WHITE GREY LIGHTBLUE YELLOW BLACK 
 * fontW and fontH: width and height of last output character      V1.1
