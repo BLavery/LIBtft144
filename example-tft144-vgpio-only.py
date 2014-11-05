@@ -5,35 +5,22 @@
 # Demonstrates the "BLACK" 128x128 SPI TFT board
 
 # There are 3 variants of this file:
-#      example-tft144.py                <<<< THIS ONE  - picks virtual or raspberry automatically
+#      example-tft144.py
 #      example-tft144-rpi-only.py
-#      example-tft144-vgpio-only.py
+#      example-tft144-vgpio-only.py     <<<<<< THIS ONE
 
 
 
-from smartGPIO import GPIO
+import virtGPIO as GPIO
 from lib_tft144 import TFT144
 from time import sleep
+spidev = GPIO
 
-
-# My tests. Two configurations.
-
-if GPIO.RPI_REVISION == 0:   # VIRTUAL-GPIO
-    RST =  8
-    CE =  10    # VirtGPIO: the chosen Chip Select pin#. (different from rpi)
-    DC =   9
-    LED =  7
-    spidev = GPIO
-    # the virtual GPIO module directly supports spidev function
-
-else:   # RPI
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM)
-    RST = 18    # RST may use direct +3V strapping, and then be listed as 0 here. (Soft Reset used instead)
-    CE =   0    # RPI GPIO: 0 or 1 for CE0 / CE1 number (NOT the pin#)
-    DC =  22    # Labeled on board as "A0"   Command/Data select
-    LED = 23    # LED may also be strapped direct to +3V, (and then LED=0 here). LED sinks 10-14 mA @ 3V
-    import spidev
+RST =  8
+CE =  10    # VirtGPIO: the chosen Chip Select pin#. (different meaning from rpi)
+DC =   9
+LED =  7
+spidev = GPIO
 
 
 

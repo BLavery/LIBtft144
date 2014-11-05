@@ -8,10 +8,6 @@
 
 # See the alternate pin assignments a few lines down.
 
-# The LIBtft144 library automatically finds correct GPIO hardware for RPI's GPIO, or vGPIO on a PC
-# It attempts virtual GPIO first, then defaults across to RPI's GPIO
-# For vGPIO mode, you will need virtGPIO.py and vGPIOconstants.py on that RPI or PC
-
 # THE DEMO:
 # Filling screen with small font text.  Shows font character set.
 # Show screen blanking control.
@@ -23,40 +19,43 @@
 # Graphics: rectangles, lines, circles
 # "Bat and ball" animation
 
-from LIBtft144 import TFT144
+from smartGPIO import GPIO
+from lib_tft144 import TFT144
 from time import sleep
 
-# My tests. Two configurations. You could rewrite this and simply list your 4 pins.
-print "GPIO platform found:", TFT144.GPIOplatform
-# (The LIBtft144 module can tell us which GPIO system it found.)
 
-if TFT144.GPIOplatform == "RPI-GPIO":                        # My BCM GPIO numbers
-    RST = 18    # RST may use direct +3V strapping, and then be listed as 0 here. (Soft Reset used instead)
-    CE =   0    # RPI GPIO: 0 or 1 for CE0 / CE1 number (NOT the pin#)
-    DC =  22    # Labeled on board as "A0"   Command/Data select
-    LED = 23    # LED may also be strapped direct to +3V, (and then LED=0 here). LED sinks 10-14 mA @ 3V
 
-elif TFT144.GPIOplatform == "virtGPIO":                      # My Arduino "virtual GPIO" numbers
+if GPIO.RPI_REVISION == 0:   # VIRTUAL-GPIO
     RST =  8
     CE =  10    # VirtGPIO: the chosen Chip Select pin#. (different from rpi)
     DC =   9
     LED =  7
+    spi = GPIO.SpiDev()
+    # the virtual GPIO module directly supports spidev function
 
-else:
-    print "No GPIO found."
-    exit()
+else:   # RPI
+    GPIO.setwarnings(False)
+    GPIO.setmode(GPIO.BCM)
+    RST = 18    # RST may use direct +3V strapping, and then be listed as 0 here. (Soft Reset used instead)
+    CE =   0    # RPI GPIO: 0 or 1 for CE0 / CE1 number (NOT the pin#)
+    DC =  22    # Labeled on board as "A0"   Command/Data select
+    LED = 23    # LED may also be strapped direct to +3V, (and then LED=0 here). LED sinks 10-14 mA @ 3V
+    import spidev
+    spi = spidev.SpiDev()
+
+
 
 #  Don't forget the other 2 SPI pins SCK and MOSI (SDA)
 
 #  OK, GPIO (of one variety) is all ready. Now do the LCD demo:
 
 
-TFT = TFT144(CE, DC, RST, LED, TFT144.ORIENTATION90)
-# TFT = TFT144(CE, DC)     # the minimalist version
+TFT = TFT144(GPIO, spi, CE, DC, RST, LED, TFT144.ORIENTATION90)
+# TFT = TFT144(GPIO, spi, CE, DC)     # the minimalist version
 
 posx=0
 posy=0
-print "Display character set:"
+print ("Display character set:")
 for i in range (32,256):
    TFT.put_char(chr(i),posx,posy,TFT.WHITE,TFT.BLACK)
    posx+=6
@@ -71,14 +70,14 @@ for i in range (48,123):
       posy+=8
 sleep(2)
 
-print "Screen blank"
+print ("Screen blank")
 TFT.led_on(False)
 sleep(2)
 TFT.led_on(True)
 sleep(7)
 
 
-print "Start Scroll"
+print ("Start Scroll")
 # NOTE: scroll function looks tempting, but may not really have any useful application.
 # It also seems not to acknowledge display orientation setting.
 TFT.scroll_area(10,50)
@@ -95,7 +94,7 @@ TFT.put_string("<<< INVERSION >>>",TFT.textX(2),TFT.textY(15),TFT.YELLOW,TFT.RED
 # Note can use "character-based" cursor location instead of pixel-based (textX())
 sleep(2)
 
-print "INVERSION test"
+print ("INVERSION test")
 for i in range (0,2):
    TFT.invert_screen()
    sleep (0.5)
@@ -106,53 +105,53 @@ sleep(3)
 TFT.clear_display(TFT.BLUE)
 
 
-print "Message:"
+print ("Message:")
 TFT.put_string("Hello,World!",21,22,TFT.WHITE,TFT.BLUE,7)
 TFT.put_string("g'DAY", 25,80,TFT.RED, TFT.BLUE, 4)
 sleep(3)
 
-print "BMP image:"
+print ("BMP image:")
 # Prepare your little BMP image first. Correct size. 3 colour (ie 3bytes/pixel format). And rotate it!
 # You may need to tinker to get it right.
-if TFT.GPIOplatform == "RPI-GPIO":
-    if TFT.draw_bmp("rpi2.bmp", 29,45):
+if GPIO.RPI_REVISION>0:
+    if TFT.draw_bmp("rpi2.bmp", 26,45):
         sleep(6)
 else:
     # on non-RPI, let's not offend the Foundation
-    if TFT.draw_bmp("gpio.bmp", 29,45):
+    if TFT.draw_bmp("gpio.bmp", 26,45):
         sleep(6)
 
 TFT.draw_bmp("bl.bmp")
 sleep(6)
 
-print "Rectangle"
+print ("Rectangle")
 TFT.draw_filled_rectangle(0,0,128,64 ,TFT.RED)
 TFT.draw_filled_rectangle(0,64,128,128,TFT.BLACK)
 for i in range (4,32,4):
-   TFT.draw_rectangle(i,i,128-i,64-i,TFT.rgb(i-1,i-1,i-1))
+   TFT.draw_rectangle(i,i,128-i,64-i,TFT.colour565(i-1,i-1,i-1))
 
-print "Line:"
+print ("Line:")
 TFT.draw_line(0,0,128,128,TFT.GREEN)
 TFT.draw_line(0,128,128,0,TFT.GREEN)
 
-print "Circles:"
+print ("Circles:")
 TFT.draw_circle(64,64,63,TFT.BLUE)
 TFT.draw_circle(64,64,53,TFT.BLUE)
 TFT.draw_circle(64,64,43,TFT.BLUE)
 TFT.draw_circle(64,64,33,TFT.BLUE)
 
-print "Rectangles"
+print ("Rectangles")
 TFT.draw_filled_rectangle(0,64,128,128,TFT.BLACK)
 TFT.draw_rectangle(0,64,127,127,TFT.BLUE)
 
-print "Ball & Bat"
+print ("Ball & Bat")
 # bat and ball animation
 ballX=64
 ballY=96
 ballSpeed=1
 xDir=ballSpeed
 yDir=ballSpeed
-print "(CTRL-C to finish ...)"
+print ("(CTRL-C to finish ...)")
 
 while(1):
    TFT.draw_filled_rectangle(ballX,ballY,ballX+2,ballY+2,TFT.BLACK)

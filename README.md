@@ -1,5 +1,5 @@
-LIBtft144
-=========
+lib_tft144
+==========
 
 LCD-TFT-1.44 128x128px.  An SPI library for Raspberry Pi or Virtual GPIO.
 
@@ -17,14 +17,14 @@ Free software, derived from:
    (2) ... then Antares python/parallel Raspberry Pi code:
       http://www.raspberrypi.org/forums/viewtopic.php?t=58291&p=450201
 
-Added: SPI access, BMP file load, double size fonts, python class
+Added: SPI access, BMP file load, double size fonts, python class, python3/2.7 compatibility
 Works on: Rasp Pi GPIO,    or "virtual GPIO" 3.3V   (identical library for both)
 
 On Raspberry Pi, uses SpiDev and RPi.GPIO.
 
 
-                   THIS BOARD WORKS A TREAT !!!!                   
-                   
-                   
-                   
-(Use only on Raspberry Pi GPIO for now.)
+                   THIS BOARD WORKS A TREAT !!!!
+
+
+
+See examples files  for Raspberry Pi use, virtual-GPIO use, and "smart" GPIO selection (RPi or virtual)
