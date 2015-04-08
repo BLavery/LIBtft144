@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#   lib_tft144.py                 v1.1.1
+#   lib_tft144.py                 v1.5
 
-#   Raspberry Pi Serial-SPI version.  Tested against the "BLACK" 1.44 board from eBay
+#   Raspberry Pi Serial-SPI version
 #        eg http://www.ebay.com.au/itm/141239781210     - under $4!
+#   Both "red" and "black" boards supported as from V1.5 April 2015
 #   Board has inbuilt 5V-3V (2.9?) regulator (which does NOT break out the 3V!!)
 #   As far as I can discern, logic level is still 3.3V limit, despite supply is 5V.
 #   Currently the code here is designed simply for case of 128x128 pixels.
@@ -102,14 +103,14 @@ VIRTUALGPIO = 0
 from lcdfonts import *
 
 class TFT144:
-
+    # red board is built 180 rotated relative to black board !!
     ORIENTATION0=0
     ORIENTATION90=96
     ORIENTATION270=160
     ORIENTATION180=192
     # Do you rotate the image, or the device?  :-)
 
-    def __init__(self, gpio, spidev, CE, dc_pin, rst_pin=0, led_pin=0, orientation=ORIENTATION0):
+    def __init__(self, gpio, spidev, CE, dc_pin, rst_pin=0, led_pin=0, orientation=ORIENTATION0, isRedBoard=False, spi_speed=16000000):
         # CE is 0 or 1 for RPI, but is actual CE pin for virtGPIO
         # RST pin.  0  means soft reset (but reset pin still needs holding high (3V)
         # LED pin, may be tied to 3V (abt 14mA) or used on a 3V logic pin (abt 7mA)
@@ -117,6 +118,8 @@ class TFT144:
         global GPIO
         GPIO = gpio
         self.SPI = spidev
+        self.orientation = orientation
+        self.is_redboard = isRedBoard
         self.BLUE = self.colour565(0,0,255)
         self.GREEN = self.colour565(0,255, 0)
         self.RED = self.colour565(255,0,0)
@@ -142,6 +145,8 @@ class TFT144:
             GPIO.setup(led_pin, GPIO.OUT)
             self.led_on(True)
         self.SPI.open(0, CE)    # CE is 0 or 1   (means pin CE0 or CE1) or actual CE pin for virtGPIO
+        self.SPI.max_speed_hz=spi_speed
+        # Black board may cope with 32000000 Hz. Red board up to 16000000. YMMV.
         sleep(0.5)
         self.init_LCD(orientation)
 
@@ -244,6 +249,13 @@ class TFT144:
                 self.write_data([color_hi, color_lo] * TFTWIDTH)
 
     def set_frame(self, x1=0, x2=TFTWIDTH-1, y1=0, y2=TFTHEIGHT-1 ):
+       if self.is_redboard:
+           if self.orientation==self.ORIENTATION0:
+               y1 += 32
+               y2 += 32 
+           if self.orientation==self.ORIENTATION90:
+               x1 += 32
+               x2 += 32 
        self.write_command(SET_COLUMN_ADDRESS)
        self.write_data([0, x1, 0, x2])
        self.write_command(SET_PAGE_ADDRESS)
@@ -411,21 +423,6 @@ class TFT144:
           x +=(fontW)
 
 
-
-
-    # defines scroll area, row1=lines in top fixed area,
-    # row2= lines in bottom fixed area
-    def scroll_area(self, row1,row2):
-       high=TFTHEIGHT-(row1+row2)
-       self.write_command(SET_SCROLL_AREA)
-       self.write_data([0x00, row1, 0, high, 0, row2])
-       self.set_frame()
-
-    # starts vertical scroll, line=how many lines from the start
-    # of the memory frame will be scrolled
-    def scroll_start(self, line):
-       self.write_command(SET_SCROLL_START)
-       self.write_data([0x00, line])
 
     def draw_bmp(self, filename, x0=0, y0=0):
         if not os.path.exists(filename):

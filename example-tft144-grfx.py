@@ -1,4 +1,4 @@
-#   example-tft144-grfx.py          V1.1
+#   example-tft144-grfx.py          V1.5
 #   Brian Lavery (C) Oct 2014    brian (at) blavery (dot) com
 #   Free software.
 
@@ -11,7 +11,6 @@
 # THE DEMO:
 # Filling screen with small font text.  Shows font character set.
 # Show screen blanking control.
-# "scrolling" demo. This chip-based function looks enticing, but not sure if it can be used usefully.
 # Show "inversion" of screen (ie like a photographic colour negative).
 # Text with choice of colours. String-based printing.
 # Two sizes of font.
@@ -50,7 +49,7 @@ else:   # RPI
 #  OK, GPIO (of one variety) is all ready. Now do the LCD demo:
 
 
-TFT = TFT144(GPIO, spi, CE, DC, RST, LED, TFT144.ORIENTATION90)
+TFT = TFT144(GPIO, spi, CE, DC, RST, LED, TFT144.ORIENTATION90, isRedBoard=False)
 # TFT = TFT144(GPIO, spi, CE, DC)     # the minimalist version
 
 posx=0
@@ -75,19 +74,6 @@ TFT.led_on(False)
 sleep(2)
 TFT.led_on(True)
 sleep(7)
-
-
-print ("Start Scroll")
-# NOTE: scroll function looks tempting, but may not really have any useful application.
-# It also seems not to acknowledge display orientation setting.
-TFT.scroll_area(10,50)
-for i in range (1,132):
-   TFT.scroll_start(i)
-   sleep(0.01)
-for i in range (132,1,-1):
-   TFT.scroll_start(i)
-   sleep (0.01)
-sleep(3)
 
 
 TFT.put_string("<<< INVERSION >>>",TFT.textX(2),TFT.textY(15),TFT.YELLOW,TFT.RED)
