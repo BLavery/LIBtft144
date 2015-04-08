@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-#   lib_tft144.py                 v1.5
+#   lib_tft144.py                 v1.6
 
 #   Raspberry Pi Serial-SPI version
 #        eg http://www.ebay.com.au/itm/141239781210     - under $4!
-#   Both "red" and "black" boards supported as from V1.5 April 2015
+#   Both "red" and "black" boards supported as from V1.6 April 2015
 #   Board has inbuilt 5V-3V (2.9?) regulator (which does NOT break out the 3V!!)
 #   As far as I can discern, logic level is still 3.3V limit, despite supply is 5V.
 #   Currently the code here is designed simply for case of 128x128 pixels.
@@ -252,10 +252,10 @@ class TFT144:
        if self.is_redboard:
            if self.orientation==self.ORIENTATION0:
                y1 += 32
-               y2 += 32 
+               y2 += 32
            if self.orientation==self.ORIENTATION90:
                x1 += 32
-               x2 += 32 
+               x2 += 32
        self.write_command(SET_COLUMN_ADDRESS)
        self.write_data([0, x1, 0, x2])
        self.write_command(SET_PAGE_ADDRESS)

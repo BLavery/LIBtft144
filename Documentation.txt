@@ -1,7 +1,7 @@
 lib_tft144
 =========
 
-V1.5
+V1.6
 
 Python library for a 128x128 LCD-TFT module with ILI9163 controller chip.
 This library works wirh Raspberry Oi or with Virtual-GPIO
@@ -25,13 +25,16 @@ from lib_tft144 import TFT144
 
 CONSTRUCTOR:
 
-* myTFT = TFT144(GPIO, SpiDev, CE_num, A0_pin, RST_pin, LED_pin, ScreenOrientation)
----- where CE_num = 0 or 1 (CE0/CE1) on Raspberry Pi, actual CE pin# on virtual-GPIO, 
+* myTFT = TFT144(GPIO, SpiDev, CE_num, A0_pin, RST_pin, LED_pin, Orientation, isRedBoard, spi_speed)
+---- where CE_num = 0 or 1 (CE0/CE1) on Raspberry Pi, actual CE pin# on virtual-GPIO,
 ---- "A0" (address line 0??) is also known as DC (data/command),
 ---- RST_pin may be declared or defaulted as 0 (and then tie RST to +3.3V),
 ---- LED_pin may be declared or defaulted as 0 (and then tie LED to +3.3V),
----- ScreenOrientation defaults to 0 degrees, but may be:
+---- Orientation defaults to 0 degrees, but may be:
       TFT144.ORIENTATION0, or ...90 or ...180 or ...270
+---- isRedBoard must be True for correct compensation for RED board error. Default False.
+---- spi_speed.  Raspberry Pi max is 32000000. Black board seems to accept 32000000, but red board may need lower.
+       Default 16000000
 
 Constructor examples:
 
@@ -43,7 +46,7 @@ OBJECT PROPERTIES:
 
 * ORIENTATION90 etc
 * Prenamed colours: BLUE GREEN RED PINK VIOLET LIGHTGREEN
-                 WHITE GREY LIGHTBLUE YELLOW BLACK 
+                 WHITE GREY LIGHTBLUE YELLOW BLACK
 * fontW and fontH: width and height of last output character      V1.1
 
 
@@ -79,4 +82,3 @@ TFT.clear_display(TFT.BLUE)
 TFT.put_string(“Hello”, 50, 30, TFT.WHITE, TFT.BLUE, 4)
 # This example uses CE0 on the SPI, and GPIO pin22 to “A0” on the module.
 # It prints “Hello” near centre of screen, white lettering on all blue background, large font 4.
-

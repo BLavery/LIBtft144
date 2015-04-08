@@ -1,13 +1,15 @@
-lib_tft144
-==========
+# lib_tft144
+
+V1.6    April 2015
 
 LCD-TFT-1.44 128x128px.  An SPI library for Raspberry Pi or Virtual GPIO.
 
 The "BLACK" 1.44 board from eBay -    eg http://www.ebay.com.au/itm/141239781210     - under $4!
+
 The "RED" version. eg. http://www.ebay.com.au/itm/400685907981
 
 RED board has a hardware mistake that preconfigures to 128x160 instead of 128x128.
-V1.5 of this library corrects for the red board error, but YOU MUST SET "isRedBoard=True" in the TFT144 object constructor.
+V1.6 of this library corrects for the red board error, but YOU MUST SET "isRedBoard=True" in the TFT144 object constructor.
 Otherwise some display modes have screen contents jumbled.
 
 Board has inbuilt 5V-3V (2.9?) regulator (which does NOT break out the 3V!!)

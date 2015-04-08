@@ -1,8 +1,8 @@
-#   example-tft144-grfx.py          V1.5
+#   example-tft144-grfx.py          V1.6
 #   Brian Lavery (C) Oct 2014    brian (at) blavery (dot) com
 #   Free software.
 
-# Full demonstration of the "BLACK" 128x128 SPI TFT board connected to either:
+# Full demonstration of the "BLACK" or "RED" 128x128 SPI TFT board connected to either:
 #      1. Raspberry Pi
 #      2. Virtual GPIO device running at 3.3V (eg Pro-mini 328)    (vGPIO 0.9.5 min)
 

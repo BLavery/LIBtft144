@@ -1,8 +1,8 @@
-#   example-tft144.py          V1.1
+#   example-tft144.py          V1.6
 #   Brian Lavery (C) Oct 2014    brian (at) blavery (dot) com
 #   Free software.
 
-# Demonstrates the "BLACK" 128x128 SPI TFT board
+# Demonstrates the "BLACK" & "RED" 128x128 SPI TFT board
 
 # There are 3 variants of this file:
 #      example-tft144.py                <<<< THIS ONE  - picks virtual or raspberry automatically
@@ -39,7 +39,7 @@ else:   # RPI
 
 # Don't forget the other 2 SPI pins SCK and MOSI (SDA)
 
-TFT = TFT144(GPIO, spidev.SpiDev(), CE, DC, RST, LED)
+TFT = TFT144(GPIO, spidev.SpiDev(), CE, DC, RST, LED, isRedBoard=False)
 
 
 print ("Display character set:")
