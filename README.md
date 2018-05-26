@@ -1,5 +1,8 @@
 # lib_tft144
 
+## May 2018 - This is no longer being maintained by the original author.
+## Please feel free to fork, copy, adapt if you find it useable
+
 V1.6    April 2015
 
 LCD-TFT-1.44 128x128px.  An SPI library for Raspberry Pi or Virtual GPIO.
